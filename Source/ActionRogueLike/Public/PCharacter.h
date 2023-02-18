@@ -9,8 +9,6 @@
 class UCameraComponent;
 class USpringArmComponent;
 
-
-
 UCLASS()
 class ACTIONROGUELIKE_API APCharacter : public ACharacter
 {
@@ -24,15 +22,22 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere);
+	UPROPERTY(EditDefaultsOnly);
 	USpringArmComponent* SpringArmComp;
 
-	UPROPERTY(VisibleAnywhere);
+	UPROPERTY(EditDefaultsOnly);
 	UCameraComponent* CameraComp;
 
 	void MoveForward(float Value);
 
 	void MoveRight(float Value);
+
+	void Jump();
+
+	void PrimaryAttack();
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AActor> projectileClass;
 	 
 
 public:	
@@ -41,5 +46,4 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };

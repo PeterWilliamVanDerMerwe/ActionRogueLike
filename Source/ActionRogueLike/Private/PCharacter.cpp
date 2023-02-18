@@ -22,14 +22,12 @@ APCharacter::APCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	bUseControllerRotationYaw = false;
-
 }
 
 // Called when the game starts or when spawned
 void APCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -38,20 +36,16 @@ void APCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FVector LineStart = GetActorLocation();
-	// Offset to the right of pawn
-	LineStart += GetActorRightVector() * 100.0f;
-	// Set line end in direction of the actor's forward
 	FVector ActorDirection_LineEnd = LineStart + (GetActorForwardVector() * 100.0f);
-	// Draw Actor's Direction
 	FVector ControllerDirection_LineEnd = LineStart + (GetControlRotation().Vector() * 100.0f);
-	// Draw 'Controller' Rotation ('PlayerController' that 'possessed' this character)
-	
 
+	LineStart += GetActorRightVector() * 100.0f;
 }
 
 void APCharacter::MoveForward(float value)
 {
 	FRotator ControlRot = GetControlRotation();
+
 	ControlRot.Pitch = 0.0f;
 	ControlRot.Roll = 0.0f;
 
@@ -61,16 +55,28 @@ void APCharacter::MoveForward(float value)
 void APCharacter::MoveRight(float value)
 {
 	FRotator ControlRot = GetControlRotation();
+	FVector RightVector = FRotationMatrix(ControlRot).GetScaledAxis(EAxis::Y);
+
 	ControlRot.Pitch = 0.0f;
 	ControlRot.Roll = 0.0f;
 
-	//X FDorward Red
-	//Y Right Green
-	//Z Up Blue
-
-	FVector RightVector = FRotationMatrix(ControlRot).GetScaledAxis(EAxis::Y);
-
 	AddMovementInput(RightVector, value);
+}
+
+void APCharacter::Jump()
+{
+
+}
+
+void APCharacter::PrimaryAttack()
+{
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	FActorSpawnParameters SpawnParams;
+
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	GetWorld()->SpawnActor<AActor>(projectileClass, SpawnTM, SpawnParams);
 }
 
 // Called to bind functionality to input
@@ -79,13 +85,11 @@ void APCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &APCharacter::MoveForward);
-
 	PlayerInputComponent->BindAxis("MoveRight", this, &APCharacter::MoveRight);
-
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
-
+	PlayerInputComponent->BindAction("Primary Attack", IE_Pressed, this, &APCharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &APCharacter::Jump);
 }
 

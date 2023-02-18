@@ -4,37 +4,35 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SMagicProjectile.generated.h"
+#include "PMagicProjectile.generated.h"
 
 class USphereComponent;
 class UProjectileMovementComponent;
 class UParticleSystemComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API ASMagicProjectile : public AActor
+class ACTIONROGUELIKE_API APMagicProjectile : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASMagicProjectile();
+	APMagicProjectile();
 
 protected:
 	// Called when the game starts or when spawned
-	
 	UPROPERTY(VisibleAnywhere)
-	USphereComponent* SphereComp;
+		USphereComponent* SphereComp;
 
 	UPROPERTY(VisibleAnywhere)
-	UProjectileMovementComponent* MovementComp;
+		UProjectileMovementComponent* MovementComp;
 
 	UPROPERTY(VisibleAnywhere)
-	UParticleSystemComponent* EffectComp;
+		UParticleSystemComponent* EffectComp;
 
 	virtual void BeginPlay() override;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 };
