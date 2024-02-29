@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "PInteractionComponent.h"
 
 // Sets default values
 APCharacter::APCharacter()
@@ -18,6 +19,8 @@ APCharacter::APCharacter()
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
+
+	InteractionComp = CreateDefaultSubobject<UPInteractionComponent>("InteractionComp");
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
@@ -68,6 +71,15 @@ void APCharacter::Jump()
 
 }
 
+void APCharacter::PrimaryInteract()
+{
+	if (InteractionComp)
+	{
+		InteractionComp->PrimaryInteract();
+
+	}
+}
+
 void APCharacter::PrimaryAttack()
 {
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
@@ -78,6 +90,8 @@ void APCharacter::PrimaryAttack()
 
 	GetWorld()->SpawnActor<AActor>(projectileClass, SpawnTM, SpawnParams);
 }
+
+
 
 // Called to bind functionality to input
 void APCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -91,5 +105,6 @@ void APCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAction("Primary Attack", IE_Pressed, this, &APCharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &APCharacter::Jump);
+	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &APCharacter::PrimaryInteract);
 }
 

@@ -8,6 +8,7 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UPInteractionComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API APCharacter : public ACharacter
@@ -28,6 +29,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly);
 	UCameraComponent* CameraComp;
 
+	UPROPERTY(EditDefaultsOnly);
+	UPInteractionComponent* InteractionComp;
+
 	void MoveForward(float Value);
 
 	void MoveRight(float Value);
@@ -35,6 +39,8 @@ protected:
 	void Jump();
 
 	void PrimaryAttack();
+
+	void PrimaryInteract();
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AActor> projectileClass;
