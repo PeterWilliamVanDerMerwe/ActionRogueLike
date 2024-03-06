@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class UPInteractionComponent;
+class UAnimMontage;
 
 UCLASS()
 class ACTIONROGUELIKE_API APCharacter : public ACharacter
@@ -31,6 +32,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly);
 	UPInteractionComponent* InteractionComp;
+	
+	FTimerHandle TimerHandle_PrimaryAttack;
+
+	void PrimaryAttack_TimeElapsed();
 
 	void MoveForward(float Value);
 
@@ -42,9 +47,11 @@ protected:
 
 	void PrimaryInteract();
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	TSubclassOf<AActor> projectileClass;
 	 
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	UAnimMontage* AttackAnim;
 
 public:	
 	// Called every frame

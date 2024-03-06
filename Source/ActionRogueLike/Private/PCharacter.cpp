@@ -76,11 +76,19 @@ void APCharacter::PrimaryInteract()
 	if (InteractionComp)
 	{
 		InteractionComp->PrimaryInteract();
-
 	}
 }
 
 void APCharacter::PrimaryAttack()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &APCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+
+	//GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+}
+
+void APCharacter::PrimaryAttack_TimeElapsed()
 {
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
@@ -90,8 +98,6 @@ void APCharacter::PrimaryAttack()
 
 	GetWorld()->SpawnActor<AActor>(projectileClass, SpawnTM, SpawnParams);
 }
-
-
 
 // Called to bind functionality to input
 void APCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
